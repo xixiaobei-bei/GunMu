@@ -32,7 +32,7 @@
 - [x] Rust
 - [x] Swift
 - [x] Kotlin
-- [ ] Scratch
+- [x] Scratch
 - [x] Ruby
 - [x] Lua
 

@@ -32,7 +32,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Rust
 - [x] Swift
 - [x] Kotlin
-- [ ] Scratch
+- [x] Scratch
 - [x] Ruby
 - [x] Lua
 
