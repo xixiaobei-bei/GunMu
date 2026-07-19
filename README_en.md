@@ -29,7 +29,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] PHP
 - [x] Visual Basic
 - [x] Go
-- [ ] Rust
+- [x] Rust
 - [ ] Swift
 - [ ] Kotlin
 - [ ] Scratch

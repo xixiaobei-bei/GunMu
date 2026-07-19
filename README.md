@@ -29,7 +29,7 @@
 - [x] PHP
 - [x] Visual Basic
 - [x] Go
-- [ ] Rust
+- [x] Rust
 - [ ] Swift
 - [ ] Kotlin
 - [ ] Scratch
