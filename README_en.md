@@ -30,7 +30,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Visual Basic
 - [x] Go
 - [x] Rust
-- [ ] Swift
+- [x] Swift
 - [ ] Kotlin
 - [ ] Scratch
 - [ ] Ruby

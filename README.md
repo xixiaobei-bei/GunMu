@@ -30,7 +30,7 @@
 - [x] Visual Basic
 - [x] Go
 - [x] Rust
-- [ ] Swift
+- [x] Swift
 - [ ] Kotlin
 - [ ] Scratch
 - [ ] Ruby
