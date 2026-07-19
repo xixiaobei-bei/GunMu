@@ -31,7 +31,7 @@
 - [x] Go
 - [x] Rust
 - [x] Swift
-- [ ] Kotlin
+- [x] Kotlin
 - [ ] Scratch
 - [ ] Ruby
 - [ ] Lua

@@ -31,7 +31,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Go
 - [x] Rust
 - [x] Swift
-- [ ] Kotlin
+- [x] Kotlin
 - [ ] Scratch
 - [ ] Ruby
 - [ ] Lua
