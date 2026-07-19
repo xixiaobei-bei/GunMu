@@ -17,7 +17,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 
 ## Currently supported languages:
 
-- [ ] Shell
+- [x] Shell
 - [ ] HTML
 - [ ] C
 - [ ] C++
