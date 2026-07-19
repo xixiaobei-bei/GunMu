@@ -28,7 +28,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] TypeScript
 - [x] PHP
 - [x] Visual Basic
-- [ ] Go
+- [x] Go
 - [ ] Rust
 - [ ] Swift
 - [ ] Kotlin

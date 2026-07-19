@@ -28,7 +28,7 @@
 - [x] TypeScript
 - [x] PHP
 - [x] Visual Basic
-- [ ] Go
+- [x] Go
 - [ ] Rust
 - [ ] Swift
 - [ ] Kotlin
