@@ -24,7 +24,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] C#
 - [x] Java
 - [x] Python
-- [ ] JavaScript
+- [x] JavaScript
 - [ ] TypeScript
 - [ ] PHP
 - [ ] Visual Basic

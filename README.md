@@ -24,7 +24,7 @@
 - [x] C#
 - [x] Java
 - [x] Python
-- [ ] JavaScript
+- [x] JavaScript
 - [ ] TypeScript
 - [ ] PHP
 - [ ] Visual Basic
