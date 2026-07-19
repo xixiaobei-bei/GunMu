@@ -1,0 +1,2 @@
+GunMu = " "
+puts "\"#{GunMu}\""
