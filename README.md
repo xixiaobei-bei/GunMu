@@ -34,7 +34,7 @@
 - [x] Kotlin
 - [ ] Scratch
 - [x] Ruby
-- [ ] Lua
+- [x] Lua
 
 ## 棍母滚木翻译器
 

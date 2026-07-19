@@ -1,0 +1,2 @@
+local GunMu = " "
+print("\"" .. GunMu .. "\"")
