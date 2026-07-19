@@ -23,7 +23,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [ ] C++
 - [ ] C#
 - [ ] Java
-- [ ] Python
+- [x] Python
 - [ ] JavaScript
 - [ ] TypeScript
 - [ ] PHP

@@ -23,7 +23,7 @@
 - [ ] C++
 - [ ] C#
 - [ ] Java
-- [ ] Python
+- [x] Python
 - [ ] JavaScript
 - [ ] TypeScript
 - [ ] PHP

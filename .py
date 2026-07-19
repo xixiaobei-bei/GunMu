@@ -1,0 +1,3 @@
+GunMu = " "
+
+print(GunMu)
