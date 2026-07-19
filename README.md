@@ -27,7 +27,7 @@
 - [x] JavaScript
 - [x] TypeScript
 - [x] PHP
-- [ ] Visual Basic
+- [x] Visual Basic
 - [ ] Go
 - [ ] Rust
 - [ ] Swift
