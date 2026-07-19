@@ -22,7 +22,7 @@
 - [x] C
 - [x] C++
 - [x] C#
-- [ ] Java
+- [x] Java
 - [x] Python
 - [ ] JavaScript
 - [ ] TypeScript
