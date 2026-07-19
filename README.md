@@ -20,7 +20,7 @@
 - [x] Shell
 - [x] HTML
 - [x] C
-- [ ] C++
+- [x] C++
 - [ ] C#
 - [ ] Java
 - [x] Python

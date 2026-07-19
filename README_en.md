@@ -20,7 +20,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Shell
 - [x] HTML
 - [x] C
-- [ ] C++
+- [x] C++
 - [ ] C#
 - [ ] Java
 - [x] Python
