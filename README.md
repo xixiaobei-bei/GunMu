@@ -26,7 +26,7 @@
 - [x] Python
 - [x] JavaScript
 - [x] TypeScript
-- [ ] PHP
+- [x] PHP
 - [ ] Visual Basic
 - [ ] Go
 - [ ] Rust

@@ -26,7 +26,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Python
 - [x] JavaScript
 - [x] TypeScript
-- [ ] PHP
+- [x] PHP
 - [ ] Visual Basic
 - [ ] Go
 - [ ] Rust
