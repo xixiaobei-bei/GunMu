@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>棍母滚木</title>
+    <link rel="icon" href="res/GunMu.png">
+    <style>
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:#1a1a2e; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:system-ui; padding:20px; }
+        .box { max-width:600px; width:100%; background:#16213e; border-radius:24px; padding:24px; }
+        .header { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px; }
+        .header img { height:32px; width:auto; vertical-align:middle; }
+        .header h2 { color:#e0e0e0; font-weight:400; letter-spacing:2px; font-size:24px; margin:0; }
+        .tabs { display:flex; gap:6px; margin-bottom:16px; }
+        .tabs button { flex:1; padding:8px; border:none; border-radius:20px; background:#0f1a2b; color:#667; font-weight:600; cursor:pointer; font-size:15px; }
+        .tabs button.active { background:#2a3a5a; color:#66d9a0; }
+        textarea, .output {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        textarea {
+            width:100%; min-height:80px; background:#0f1a2b; border:1px solid #2a3a5a; border-radius:12px; padding:10px; color:#e8e8e8; resize:vertical; outline:none;
+        }
+        textarea:focus { border-color:#66d9a0; }
+        .hint { color:#556; font-size:12px; margin:4px 0 10px; }
+        .actions { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+        .actions button { padding:10px 20px; border:none; border-radius:30px; background:#66d9a0; color:#0f1a2b; font-weight:700; cursor:pointer; flex:1; min-width:80px; font-size:14px; }
+        .actions button.secondary { background:transparent; border:1px solid #2a3a5a; color:#8899bb; flex:0.5; }
+        .output {
+            background:#0f1a2b; border:1px solid #2a3a5a; border-radius:12px; padding:10px; min-height:50px; color:#e0e0e0; word-break:break-all; position:relative;
+        }
+        .output .copy { position:absolute; top:6px; right:10px; background:#1a2a40; border:none; color:#667; padding:0 12px; border-radius:12px; cursor:pointer; font-size:12px; }
+        .output .copy:hover { background:#2a3a5a; color:#66d9a0; }
+        .status { display:flex; justify-content:space-between; font-size:12px; color:#556; margin-top:10px; }
+        .status .msg { color:#667; }
+        .status .msg.ok { color:#66d9a0; }
+        .err { color:#f78b8b; font-size:13px; margin-top:6px; display:none; }
+        .err.show { display:block; }
+        .okmsg { color:#66d9a0; font-size:13px; margin-top:6px; display:none; }
+        .okmsg.show { display:block; }
+
+        /* ---------- Toast 消息 ---------- */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            color: #e0e0e0;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-size: 14px;
+            border: 1px solid rgba(102,217,160,0.15);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.success { border-color: #66d9a0; color: #66d9a0; }
+        .toast.error { border-color: #f78b8b; color: #f78b8b; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="header">
+        <img src="res/GunMu.png" alt="logo">
+        <h2>棍母滚木 · 加解密</h2>
+    </div>
+    <div class="tabs">
+        <button id="tabEnc" class="active">🔒 加密</button>
+        <button id="tabDec">🔓 解密</button>
+    </div>
+    <textarea id="input" placeholder="请输入内容…"></textarea>
+    <div class="hint" id="hint">加密：任意文本；解密：只含「棍母滚木」</div>
+    <div class="actions">
+        <button id="actionBtn">⚡ 执行</button>
+        <button class="secondary" id="clearBtn">清空</button>
+    </div>
+    <div class="output" id="outputBox">
+        <span id="placeholder">等待操作…</span>
+        <span id="result" style="display:none;"></span>
+        <button class="copy" id="copyBtn">复制</button>
+    </div>
+    <div class="err" id="errMsg"></div>
+    <div class="okmsg" id="okMsg"></div>
+    <div class="status">
+        <span class="msg" id="statusMsg">就绪</span>
+        <span><span id="statIn">输入:0</span> <span id="statOut">输出:0</span></span>
+    </div>
+</div>
+
+<!-- Toast 元素 -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ---------- 核心算法 ----------
+    const AL = ['棍','母','滚','木'];
+    const B = 4n;
+
+    function enc(t) {
+        if (!t) return '';
+        const e = new TextEncoder();
+        const b = e.encode(t);
+        const p = new Uint8Array(b.length + 1);
+        p[0] = 1; p.set(b, 1);
+        let n = 0n;
+        for (let i=0; i<p.length; i++) n = (n << 8n) | BigInt(p[i]);
+        if (n === 0n) return AL[0];
+        const d = [];
+        while (n > 0n) { d.push(Number(n % B)); n /= B; }
+        return d.reverse().map(i => AL[i]).join('');
+    }
+
+    function dec(c) {
+        if (!c) return '';
+        const s = c.replace(/\s/g, '');
+        if (!s) return '';
+        let n = 0n;
+        for (const ch of s) {
+            const idx = AL.indexOf(ch);
+            if (idx === -1) throw new Error('非法字符「'+ch+'」');
+            n = n * B + BigInt(idx);
+        }
+        const bytes = [];
+        while (n > 0n) { bytes.unshift(Number(n & 0xffn)); n >>= 8n; }
+        if (bytes.length === 0) return '';
+        if (bytes[0] !== 1) throw new Error('密文无效，请确认根基为「棍母滚木」');
+        return new TextDecoder().decode(new Uint8Array(bytes.slice(1)));
+    }
+
+    // ---------- UI ----------
+    let mode = 'enc';
+    const $ = id => document.getElementById(id);
+    const input = $('input');
+    const result = $('result');
+    const placeholder = $('placeholder');
+    const errMsg = $('errMsg');
+    const okMsg = $('okMsg');
+    const statusMsg = $('statusMsg');
+    const statIn = $('statIn');
+    const statOut = $('statOut');
+    const toastEl = $('toast');
+    let toastTimer = null;
+
+    function showToast(text, type = 'success') {
+        clearTimeout(toastTimer);
+        toastEl.textContent = text;
+        toastEl.className = 'toast ' + type;
+        // 强制 reflow
+        void toastEl.offsetWidth;
+        toastEl.classList.add('show');
+        toastTimer = setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 2000);
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.id === (m==='enc'?'tabEnc':'tabDec')));
+        const hint = $('hint');
+        const actionBtn = $('actionBtn');
+        if (m === 'enc') {
+            hint.textContent = '加密：任意文本';
+            actionBtn.textContent = '🔒 加密';
+        } else {
+            hint.textContent = '解密：只含「棍母滚木」（空格可忽略）';
+            actionBtn.textContent = '🔓 解密';
+        }
+        clearAll();
+    }
+
+    function clearAll() {
+        result.style.display = 'none';
+        result.textContent = '';
+        placeholder.style.display = 'inline';
+        errMsg.className = 'err';
+        errMsg.textContent = '';
+        okMsg.className = 'okmsg';
+        okMsg.textContent = '';
+        $('copyBtn').style.opacity = '0';
+        $('copyBtn').style.pointerEvents = 'none';
+        updateStats();
+        statusMsg.textContent = '就绪';
+        statusMsg.className = 'msg';
+    }
+
+    function updateStats() {
+        const i = input.value.length;
+        const o = result.textContent.length;
+        statIn.textContent = '输入:' + i;
+        statOut.textContent = '输出:' + o;
+    }
+
+    function doAction() {
+        const text = input.value;
+        if (!text.trim()) { showErr('请输入内容'); return; }
+        clearAll();
+        statusMsg.textContent = '处理中...';
+        statusMsg.className = 'msg';
+        try {
+            let out;
+            if (mode === 'enc') {
+                out = enc(text);
+                showOk('加密成功');
+                showResult(out);
+            } else {
+                out = dec(text);
+                showOk('解密成功');
+                showResult(out);
+            }
+            statusMsg.textContent = '完成';
+            statusMsg.className = 'msg ok';
+            updateStats();
+        } catch(e) {
+            showErr(e.message);
+            statusMsg.textContent = '失败';
+            statusMsg.className = 'msg';
+        }
+    }
+
+    function showResult(t) {
+        placeholder.style.display = 'none';
+        result.style.display = 'inline';
+        result.textContent = t;
+        $('copyBtn').style.opacity = '1';
+        $('copyBtn').style.pointerEvents = 'auto';
+    }
+
+    function showErr(m) { errMsg.textContent = m; errMsg.className = 'err show'; okMsg.className = 'okmsg'; }
+    function showOk(m) { okMsg.textContent = m; okMsg.className = 'okmsg show'; errMsg.className = 'err'; }
+
+    // ----- 复制功能（带 Toast 提示）-----
+    function copyText(text) {
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text)
+                .then(() => { showToast('✅ 已复制到剪贴板', 'success'); })
+                .catch(() => { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            const success = document.execCommand('copy');
+            if (success) {
+                showToast('✅ 已复制到剪贴板', 'success');
+            } else {
+                showToast('❌ 复制失败，请手动复制', 'error');
+            }
+        } catch(e) {
+            showToast('❌ 复制失败，请手动复制', 'error');
+        }
+        document.body.removeChild(ta);
+    }
+
+    // ----- 事件绑定 -----
+    $('tabEnc').addEventListener('click', ()=>setMode('enc'));
+    $('tabDec').addEventListener('click', ()=>setMode('dec'));
+    $('actionBtn').addEventListener('click', doAction);
+    input.addEventListener('keydown', (e) => { if ((e.ctrlKey||e.metaKey) && e.key==='Enter') { e.preventDefault(); doAction(); } });
+    $('clearBtn').addEventListener('click', ()=>{ input.value=''; clearAll(); });
+    $('copyBtn').addEventListener('click', ()=>{
+        const t = result.textContent;
+        if (t) copyText(t);
+    });
+    input.addEventListener('input', ()=>{
+        if (result.textContent) clearAll();
+        updateStats();
+        statusMsg.textContent = '输入中...';
+        statusMsg.className = 'msg';
+    });
+
+    // 初始化
+    setMode('enc');
+</script>
+</body>
+</html>
