@@ -25,7 +25,7 @@
 - [x] Java
 - [x] Python
 - [x] JavaScript
-- [ ] TypeScript
+- [x] TypeScript
 - [ ] PHP
 - [ ] Visual Basic
 - [ ] Go
