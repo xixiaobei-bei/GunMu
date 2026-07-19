@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>棍母滚木</title>
     <link rel="icon" href="res/GunMu.png">
+    <!-- Font Awesome 图标库（用于 GitHub Logo） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { box-sizing:border-box; margin:0; padding:0; }
         body { background:#1a1a2e; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:system-ui; padding:20px; }
-        .box { max-width:600px; width:100%; background:#16213e; border-radius:24px; padding:24px; }
+        .box { max-width:600px; width:100%; background:#16213e; border-radius:24px; padding:24px; position:relative; }
         .header { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px; }
         .header img { height:32px; width:auto; vertical-align:middle; }
         .header h2 { color:#e0e0e0; font-weight:400; letter-spacing:2px; font-size:24px; margin:0; }
@@ -41,7 +43,7 @@
         .okmsg { color:#66d9a0; font-size:13px; margin-top:6px; display:none; }
         .okmsg.show { display:block; }
 
-        /* ---------- Toast 消息 ---------- */
+        /* Toast 消息 */
         .toast {
             position: fixed;
             bottom: 40px;
@@ -67,6 +69,38 @@
         }
         .toast.success { border-color: #66d9a0; color: #66d9a0; }
         .toast.error { border-color: #f78b8b; color: #f78b8b; }
+
+        /* ---------- GitHub 角落图标 ---------- */
+        .github-corner {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            color: #fff;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: background 0.25s, transform 0.2s;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .github-corner:hover {
+            background: rgba(255,255,255,0.15);
+            transform: scale(1.05);
+        }
+        .github-corner i {
+            font-size: 32px;
+            color: #e0e0e0;
+        }
+        .github-corner:hover i {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +134,11 @@
 
 <!-- Toast 元素 -->
 <div class="toast" id="toast"></div>
+
+<!-- GitHub 链接（右下角） -->
+<a href="https://github.com/xixiaobei-bei/GunMu" target="_blank" class="github-corner" aria-label="View source on GitHub">
+    <i class="fab fa-github"></i>
+</a>
 
 <script>
     // ---------- 核心算法 ----------
@@ -155,7 +194,6 @@
         clearTimeout(toastTimer);
         toastEl.textContent = text;
         toastEl.className = 'toast ' + type;
-        // 强制 reflow
         void toastEl.offsetWidth;
         toastEl.classList.add('show');
         toastTimer = setTimeout(() => {
@@ -238,7 +276,7 @@
     function showErr(m) { errMsg.textContent = m; errMsg.className = 'err show'; okMsg.className = 'okmsg'; }
     function showOk(m) { okMsg.textContent = m; okMsg.className = 'okmsg show'; errMsg.className = 'err'; }
 
-    // ----- 复制功能（带 Toast 提示）-----
+    // ----- 复制功能 -----
     function copyText(text) {
         if (!text) return;
         if (navigator.clipboard && navigator.clipboard.writeText) {
