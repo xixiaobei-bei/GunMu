@@ -4,6 +4,8 @@
 
 # GunMu
 
+[<u>English</u>|[简体中文](README.md)]
+
 This is GunMu, which contains many GunMu and supports multiple platforms!
 
 ## Currently supported platforms:
