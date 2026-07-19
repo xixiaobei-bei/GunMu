@@ -4,7 +4,7 @@
 
 # 棍母滚木
 
-[<u>简体中文</u>|[English](README_en.md)]
+**简体中文**|[English](README_en.md)
 
 这里是棍母滚木，里面包含许多棍母，支持多平台！
 
