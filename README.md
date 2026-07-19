@@ -33,7 +33,7 @@
 - [x] Swift
 - [x] Kotlin
 - [ ] Scratch
-- [ ] Ruby
+- [x] Ruby
 - [ ] Lua
 
 ## 棍母滚木翻译器

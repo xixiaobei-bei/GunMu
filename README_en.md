@@ -33,7 +33,7 @@ This is GunMu, which contains many GunMu and supports multiple platforms!
 - [x] Swift
 - [x] Kotlin
 - [ ] Scratch
-- [ ] Ruby
+- [x] Ruby
 - [ ] Lua
 
 ## GunMu Translator
