@@ -19,7 +19,7 @@
 
 - [x] Shell
 - [x] HTML
-- [ ] C
+- [x] C
 - [ ] C++
 - [ ] C#
 - [ ] Java
