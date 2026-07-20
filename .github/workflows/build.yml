@@ -23,15 +23,12 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-          # Swift (Linux) - 修复：先创建目标目录
+          # Swift
           sudo apt-get install -y clang libicu-dev
           wget https://download.swift.org/swift-5.9.1-release/ubuntu2204/swift-5.9.1-RELEASE/swift-5.9.1-RELEASE-ubuntu22.04.tar.gz
           tar xzf swift-*.tar.gz
-          # 解压后会生成类似 swift-5.9.1-RELEASE-ubuntu22.04 的目录
           sudo mkdir -p /opt/swift
-          # 将解压目录内的所有内容移动到 /opt/swift
           sudo mv swift-*/* /opt/swift/ 2>/dev/null || sudo mv swift-* /opt/swift/
-          # 添加 bin 到 PATH
           echo "/opt/swift/usr/bin" >> $GITHUB_PATH
 
           # Kotlin
@@ -66,17 +63,15 @@ jobs:
 
           ls -la artifacts/
 
-      # ------------------- 4. 直接发布 Release -------------------
+      # ------------------- 4. 发布 Release（全部使用不可见字符） -------------------
       - name: Publish release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: continuous
+          tag_name: "‭"               # 不可见字符 U+202D
           draft: false
           prerelease: false
-          name: "GunMu Release"
-          body: |
-            Automated build artifacts for all supported languages.
-            Contains compiled executables and source files.
+          name: "‭"                  # Release 标题也是该字符
+          body: "‭"                 # 描述也是该字符
           files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
