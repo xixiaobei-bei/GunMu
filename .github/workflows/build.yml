@@ -13,7 +13,45 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ------------------- 1. 安装编译器和依赖 -------------------
+      # ------------------- 1. 创建缺失的源文件（点开头） -------------------
+      - name: Ensure source files exist
+        run: |
+          # 辅助函数：如果文件不存在则创建
+          create_if_missing() {
+            local file="$1"
+            local content="$2"
+            if [ ! -f "$file" ]; then
+              echo "$content" > "$file"
+              echo "Created $file"
+            else
+              echo "File $file already exists, keeping it"
+            fi
+          }
+
+          # 编译型语言源文件（点开头）
+          create_if_missing ".c" '#include <stdio.h>\nint main() { const char* GunMu = " "; printf("\"%s\"\n", GunMu); return 0; }'
+          create_if_missing ".cpp" '#include <iostream>\nusing namespace std;\nint main() { const char* GunMu = " "; cout << "\"" << GunMu << "\"" << endl; return 0; }'
+          create_if_missing ".cs" 'using System;\nclass Program { static void Main() { string GunMu = " "; Console.WriteLine($"\"{GunMu}\""); } }'
+          create_if_missing ".java" 'public class Java { public static void main(String[] args) { String GunMu = " "; System.out.println("\"" + GunMu + "\""); } }'
+          create_if_missing ".go" 'package main\nimport "fmt"\nfunc main() { GunMu := " "; fmt.Printf("\"%s\"\n", GunMu) }'
+          create_if_missing ".rs" 'fn main() { let GunMu = " "; println!("\"{}\"", GunMu); }'
+          create_if_missing ".swift" 'let GunMu = " "; print("\"\(GunMu)\"")'
+          create_if_missing ".kt" 'fun main() { val GunMu = " "; println("\"$GunMu\"") }'
+          create_if_missing ".vb" 'Module GunMu\n    Sub Main()\n        Dim GunMu As String = " "\n        Console.WriteLine($"""{GunMu}""")\n    End Sub\nEnd Module'
+
+          # 解释型语言源文件（点开头）—— 如果不存在也创建
+          create_if_missing ".py" 'GunMu = " "\nprint(f"\"{GunMu}\"")'
+          create_if_missing ".js" 'const GunMu = " ";\nconsole.log(`"${GunMu}"`);'
+          create_if_missing ".ts" 'const GunMu: string = " ";\nconsole.log(`"${GunMu}"`);'
+          create_if_missing ".php" '<?php\n$GunMu = " ";\necho "\"$GunMu\"\n";\n?>'
+          create_if_missing ".rb" 'GunMu = " "\nputs "\"#{GunMu}\""'
+          create_if_missing ".lua" 'local GunMu = " "\nprint("\"" .. GunMu .. "\"")'
+          create_if_missing ".sh" '#!/bin/bash\nGunMu=" "\necho "\"$GunMu\""'
+          create_if_missing ".html" '<!DOCTYPE html>\n<html>\n<head><meta charset="UTF-8"><title> </title></head>\n<body>\n<script>\nconst GunMu = " ";\ndocument.write(\'"\' + GunMu + \'"\');\n</script>\n</body>\n</html>'
+
+          # .sb3 文件不会创建，如果不存在则跳过
+
+      # ------------------- 2. 安装编译器和依赖 -------------------
       - name: Install compilers
         run: |
           sudo apt-get update
@@ -37,41 +75,46 @@ jobs:
           sdk install kotlin
           echo "$HOME/.sdkman/candidates/kotlin/current/bin" >> $GITHUB_PATH
 
-      # ------------------- 2. 编译各语言 -------------------
+      # ------------------- 3. 编译各语言（使用点开头的源文件） -------------------
       - name: Build executables
         run: |
           export PATH="$HOME/.cargo/bin:/opt/swift/usr/bin:$HOME/.sdkman/candidates/kotlin/current/bin:$PATH"
 
-          gcc -o C.exe C.c
-          g++ -o Cpp.exe Cpp.cpp
-          mcs -out:CSharp.exe CSharp.cs
-          javac Java.java && jar cfe Java.jar Java Java.class
-          go build -o Go.exe Go.go
-          rustc Rust.rs -o Rust.exe
-          swiftc -o Swift.exe Swift.swift
-          kotlinc Kotlin.kt -include-runtime -d Kotlin.jar
-          vbnc /out:VisualBasic.exe VisualBasic.vb
+          gcc -o C.exe .c
+          g++ -o Cpp.exe .cpp
+          mcs -out:CSharp.exe .cs
+          javac .java && jar cfe Java.jar Java .class
+          go build -o Go.exe .go
+          rustc .rs -o Rust.exe
+          swiftc -o Swift.exe .swift
+          kotlinc .kt -include-runtime -d Kotlin.jar
+          vbnc /out:VisualBasic.exe .vb
 
-      # ------------------- 3. 收集所有文件 -------------------
+      # ------------------- 4. 收集所有文件 -------------------
       - name: Collect artifacts
         run: |
           mkdir -p artifacts
 
+          # 编译产物（带语言名）
           cp C.exe Cpp.exe CSharp.exe Java.jar Go.exe Rust.exe Swift.exe Kotlin.jar VisualBasic.exe artifacts/ 2>/dev/null || true
+
+          # 解释型源文件（点开头）
           cp .py .js .ts .php .rb .lua .sh .html artifacts/ 2>/dev/null || true
+
+          # Scratch 项目（如果有）
           cp .sb3 artifacts/ 2>/dev/null || true
 
           ls -la artifacts/
 
-      # ------------------- 4. 发布 Release（全部使用不可见字符） -------------------
+      # ------------------- 5. 发布 Release（不可见字符） -------------------
       - name: Publish release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "‭"               # 不可见字符 U+202D
+          tag_name: "‭"
           draft: false
           prerelease: false
-          name: "‭"                  # Release 标题也是该字符
-          body: "‭"                 # 描述也是该字符
+          name: "‭"
+          body: "‭"
           files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
