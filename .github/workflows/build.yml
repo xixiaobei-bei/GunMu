@@ -17,13 +17,13 @@ jobs:
       - name: Install compilers
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ mono-mcs mono-vbnc default-jdk-headless golang-go
+          sudo apt-get install -y gcc g++ mono-complete default-jdk-headless golang-go
 
           # Rust
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-          # Swift (Linux)
+          # Swift
           sudo apt-get install -y clang libicu-dev
           wget https://download.swift.org/swift-5.9.1-release/ubuntu2204/swift-5.9.1-RELEASE/swift-5.9.1-RELEASE-ubuntu22.04.tar.gz
           tar xzf swift-*.tar.gz
@@ -56,24 +56,22 @@ jobs:
         run: |
           mkdir -p artifacts
 
-          # 编译产物（.exe 和 .jar）
           cp C.exe Cpp.exe CSharp.exe Java.jar Go.exe Rust.exe Swift.exe Kotlin.jar VisualBasic.exe artifacts/ 2>/dev/null || true
-
-          # 解释型语言源文件（点开头的文件）
           cp .py .js .ts .php .rb .lua .sh .html artifacts/ 2>/dev/null || true
-
-          # Scratch 项目文件
           cp .sb3 artifacts/ 2>/dev/null || true
 
-          # 列出所有文件，方便调试
           ls -la artifacts/
 
-      # ------------------- 4. 上传到 Release 草稿 -------------------
-      - name: Upload to draft release
+      # ------------------- 4. 直接发布 Release（不再草稿） -------------------
+      - name: Publish release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: continuous
-          draft: true
+          tag_name: ‭
+          draft: false                     # 直接发布，不是草稿
+          prerelease: false                # 正式版本
+          name: "‭"            # Release 标题
+          body: |
+            ‭
           files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
